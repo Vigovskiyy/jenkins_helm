@@ -9,6 +9,6 @@ entries:
     name: jenkins_helm
     type: application
     urls:
-    - https://Vigovskiyy.github.io/jenkins_helm/jenkins_helm-0.1.0.tgz
+    - https://vigovskiyy.github.io/jenkins_helm/jenkins_helm-0.1.0.tgz
     version: 0.1.0
 generated: "2022-06-15T10:37:04.973282225Z"
