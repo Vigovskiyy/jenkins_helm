@@ -1,16 +1,14 @@
-# Default values for jenkins_helm.
+# Default values for jenkins-helm.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: nginx
-  pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  registry: jfrog.it-academy.by
+  repository: jfrog.it-academy.by/public/jenkins-ci:vigovskiyy
+  puillPolicy: IfNotPresent
 
-imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
@@ -22,6 +20,23 @@ serviceAccount:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: ""
+basic_security_path: /var/jenkins_home/init.groovy.d/basic-security.groovy
+jenkins_yaml_path: /var/jenkins_home/casc_configs/jenkins.yaml
+jenkins_path: /var/jenkins_home
+nfs_server: 192.168.37.105
+admin_email: gatter3@yandex.ru
+nfs_path: /mnt/IT-Academy/nfs-data/sa2-20-22/Yuri_Vygovskiy/jenkins
+
+containerPort:
+  http-port: 8080
+  jnlp-port: 50000
+
+host:
+  main_host: jenkins.k8s-13.sa
+  second_host: jenkins.k8s-14.sa
+
+url:
+  main_host_url: http://jenkins.k8s-13.sa/
 
 podAnnotations: {}
 
@@ -29,51 +44,37 @@ podSecurityContext: {}
   # fsGroup: 2000
 
 securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
 
 service:
   type: ClusterIP
   port: 80
 
 ingress:
-  enabled: false
+  enabled: true
   className: ""
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/server-alias: "jenkins.k8s-14.sa"
   hosts:
-    - host: chart-example.local
+    - host: jenkins.k8s-13.sa
       paths:
         - path: /
           pathType: ImplementationSpecific
   tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
 
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+resources:
+  limits:
+    cpu: 3000m
+    memory: 3000Mi
+  requests:
+    cpu: 2000m
+    memory: 2000Mi
 
 autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
 
 nodeSelector: {}
 
